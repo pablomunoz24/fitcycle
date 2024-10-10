@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "787695633742",
+    "project_id": "fitcycle-fa5fa",
+    "storage_bucket": "fitcycle-fa5fa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:787695633742:android:8b0ae5a0608b789a3a4a1f",
+        "android_client_info": {
+          "package_name": "com.example.fitcycle"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDe-DdRu7ltjGh7oM3VnACXtYoD1j0jpr4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
