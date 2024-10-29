@@ -21,7 +21,6 @@ class _RegisterPageState extends State<RegisterPage> {
   final _password = TextEditingController();
   final _repPassword = TextEditingController();
   final _city = TextEditingController();
-
   final _weight = TextEditingController();
 
   bool _isPasswordObscure = true;
@@ -92,9 +91,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void _createUser(User user) async {
 
-    /*   SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("user", jsonEncode(user));*/
-
     var result = await _firebaseApi.createUser(user.email, user.password);
 
     if (result == 'invalid-email') {
@@ -106,7 +102,7 @@ class _RegisterPageState extends State<RegisterPage> {
     } else if (result == 'network-request-failed') {
       _showMessage('Revise su conexión a internet');
     } else {
-      user.uid=result!;
+      user.uid = result!;
       _createUserInDB(user);
     }
   }
@@ -128,7 +124,7 @@ class _RegisterPageState extends State<RegisterPage> {
           _isTroncosuperiorF,
           _isTroncoInferiro,
           _isCardio,
-          _level,
+          _level.text,
           _data.toString(),
           _city.text);
       _createUser(user);
