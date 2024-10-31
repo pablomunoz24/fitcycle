@@ -1,5 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fitcycle/models/ejercise.dart';
+
 import '../models/user.dart' as UserApp;
 
 class FirebaseAppi {
@@ -46,4 +51,62 @@ class FirebaseAppi {
       return e.code;
     }
   }
+  Future<String> createEjercise(Ejercise ejercise, File? image) async{
+    try{
+      final uid = FirebaseAuth.instance.currentUser?.uid;
+      var db = FirebaseFirestore.instance;
+      final document = await db
+          .collection('users')
+          .doc(uid)
+          .collection('ejercise')
+          .doc();
+      ejercise.id = document.id;
+
+      final storageRef = FirebaseStorage.instance.ref();
+      final ejercisePictureRef = storageRef.child('ejercises').child("${ejercise.id}.jpg");
+      await ejercisePictureRef.putFile(image!);
+      ejercise.urlPicture = await ejercisePictureRef.getDownloadURL();
+
+      await db
+          .collection('users')
+          .doc(uid)
+          .collection('ejercises')
+          .doc(document.id)
+          .set(ejercise.toJson());
+
+      await db
+          .collection('ejercises')
+          .doc(document.id)
+          .set(ejercise.toJson());
+
+      return document.id;
+    } on FirebaseException catch (e) {
+      print("FirebaseException ${e.code}");
+      return e.code;
+    }
+  }
+
+  Future<String> deleteEjercise(QueryDocumentSnapshot ejercise) async{
+    try{
+      final uid = FirebaseAuth.instance.currentUser?.uid;
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('ejercises')
+          .doc(ejercise.id)
+          .delete();
+
+      await FirebaseFirestore.instance
+          .collection('ejercises')
+          .doc(ejercise.id)
+          .delete();
+
+      return uid!;
+    } on FirebaseException catch (e) {
+      print("FirebaseException ${e.code}");
+      return e.code;
+    }
+  }
+
 }
