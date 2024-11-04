@@ -116,7 +116,7 @@ class _NewEjercisePageState extends State<NewEjercisePage> {
                     image != null
                         ? Image.file(image!, width: 150, height: 150)
                         : const Image(
-                      image: AssetImage('assets/images/logo.png'),
+                      image: AssetImage('assets/images/fitcycle.png'),
                       width: 150,
                       height: 150,
                     ),
@@ -281,6 +281,22 @@ class _NewEjercisePageState extends State<NewEjercisePage> {
                       onChanged: (bool? value) {
                         setState(() {
                           _Sabado = value!;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: CheckboxListTile(
+                      title: const Text('Domingo'),
+                      value: _Domingo,
+                      selected: _Domingo,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _Domingo = value!;
                         });
                       },
                     ),

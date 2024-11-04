@@ -75,7 +75,7 @@ class _EjercisePersPageState extends State<EjercisePersPage> {
           children: [
             ListTile(
               title: Text(ejercise['name']),
-              subtitle: Text(ejercise['duracion']),
+              subtitle: Text('${ejercise['duration']} segundos'),
               leading: Image.network(
                 ejercise['urlPicture'] ?? "",
               ),
