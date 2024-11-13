@@ -49,7 +49,7 @@ class _EjercisePageState extends State<EjercisePage> {
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 8.0),
                             child: Text(
-                              'Entrenamiento Personalizado',
+                              '        Mis Ejercicios        ',
                               style: TextStyle(
                                 fontFamily: 'San Francisco',
                                 fontSize: 17,
@@ -87,7 +87,7 @@ class _EjercisePageState extends State<EjercisePage> {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8.0),
                           child: Text(
-                            '       Entrenamiento del dia       ',
+                            '  Entrenamiento del dia  ',
                             style: TextStyle(
                               fontFamily: 'San Francisco',
                               fontSize: 17,

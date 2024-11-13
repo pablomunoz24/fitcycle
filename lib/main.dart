@@ -3,10 +3,16 @@ import 'package:fitcycle/pages/login_page.dart';
 import 'package:fitcycle/pages/splash_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'firebase_options.dart';
+import 'models/local_ejercise.dart';
 
 void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(LocalEjerciseAdapter());
+  await Hive.openBox<LocalEjercise>('ejercise');
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

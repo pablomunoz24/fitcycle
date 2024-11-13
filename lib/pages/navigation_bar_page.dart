@@ -41,8 +41,8 @@ class _NavigationBarPageState extends State<NavigationBarPage> {
               label: "Ejercicio"
           ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.add_chart),
-              label: "Progreso"
+              icon: Icon(Icons.list),
+              label: "Lista Ejercicios"
           ),
           BottomNavigationBarItem(
               icon: Icon(Icons.person),

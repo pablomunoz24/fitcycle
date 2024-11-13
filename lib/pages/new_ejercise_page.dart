@@ -6,10 +6,20 @@ import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../boxes.dart';
+import '../models/local_ejercise.dart';
 import '../repositorio/firebase_api.dart';
 
 class NewEjercisePage extends StatefulWidget {
-  const NewEjercisePage({super.key});
+  final String? initialExerciseName;
+  final VoidCallback? onFavoriteSaved;
+
+  const NewEjercisePage({
+    Key? key,
+    this.initialExerciseName,
+    this.onFavoriteSaved,
+  }) : super(key: key);
+
 
   @override
   State<NewEjercisePage> createState() => _NewEjercisePageState();
@@ -18,10 +28,17 @@ class NewEjercisePage extends StatefulWidget {
 class _NewEjercisePageState extends State<NewEjercisePage> {
   final FirebaseAppi _firebaseApi = FirebaseAppi();
 
+
   final _name = TextEditingController();
   final _duration = TextEditingController();
   final _level = TextEditingController();
   final _intensity = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    // Set initial value for the _name controller
+    _name.text = widget.initialExerciseName ?? '';
+  }
 
   bool _isTroncosuperiorE = false, _isTroncoInferiroE = false, _Lunes = false;
   bool _Martes = false,
@@ -54,9 +71,31 @@ class _NewEjercisePageState extends State<NewEjercisePage> {
     if (result == 'network-request-failed') {
       showMessage('Revise su conexión a internet');
     } else {
-      showMessage('Película creada exitosamente');
+      showMessage('Ejercicio creada exitosamente');
       Navigator.pop(context);
     }
+    // Notify that the exercise was saved
+    if (widget.onFavoriteSaved != null) {
+      widget.onFavoriteSaved!();
+    }
+    var localEjercise =LocalEjercise()
+      ..id=ejercise.id
+      ..name=ejercise.name
+      ..duration=ejercise.duration
+      ..isTroncosuperiorE=ejercise.isTroncosuperiorF
+      ..isTroncoInferiroE=ejercise.isTroncoInferiro
+      ..Lunes=ejercise.Lunes
+      ..Martes=ejercise.Martes
+      ..Miercoles=ejercise.Miercoles
+      ..Jueves=ejercise.Jueves
+      ..Viernes=ejercise.Viernes
+      ..Sabado=ejercise.Sabado
+      ..Domingo=ejercise.Domingo
+      ..Level=ejercise.level
+      ..intensity=ejercise.intensity
+      ..urlPicture=ejercise.urlPicture;
+    final box=Boxes.getLocalEjerciseBox();
+    box.add(localEjercise);
   }
 
   void showMessage(String msg) {
@@ -100,7 +139,7 @@ class _NewEjercisePageState extends State<NewEjercisePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Nueva Película'),
+        title: const Text('Nuevo Ejercicio  '),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),

@@ -1,8 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fitcycle/pages/new_ejercise_page.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../repositorio/firebase_api.dart';
+import 'new_ejercise_page.dart';
 
 class EjercisePersPage extends StatefulWidget {
   const EjercisePersPage({super.key});
@@ -16,15 +17,22 @@ class _EjercisePersPageState extends State<EjercisePersPage> {
 
   void _addButtonClicked() {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const NewEjercisePage()));
+      context,
+      MaterialPageRoute(builder: (context) => const NewEjercisePage()),
+    );
   }
 
-  void _deleteEjercise(QueryDocumentSnapshot ejercise) async {
+  Future<void> _deleteEjercise(QueryDocumentSnapshot ejercise) async {
+    // Eliminar de la base de datos
     var result = await _firebaseApi.deleteEjercise(ejercise);
     if (result == 'network-request-failed') {
       _showMessage('Revise su conexión a internet');
-    }else {
-      _showMessage('Pelicula eliminada con éxito');
+    } else {
+      _showMessage('Ejercicio eliminado con éxito');
+
+      // Eliminar el estado de favorito usando SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(ejercise['name']); // Eliminar el estado de favorito si existe
     }
   }
 
@@ -38,18 +46,19 @@ class _EjercisePersPageState extends State<EjercisePersPage> {
   void _showAlertDialog(QueryDocumentSnapshot ejercise) {
     AlertDialog alert = AlertDialog(
       title: const Text('Advertencia'),
-      content:
-      Text("¿Está seguro que desea eliminar el ejercicio  ${ejercise['name']}?"),
+      content: Text("¿Está seguro que desea eliminar el ejercicio ${ejercise['name']}?"),
       actions: [
         TextButton(
-            onPressed: () => Navigator.pop(context, 'Cancel'),
-            child: Text('Cancelar')),
+          onPressed: () => Navigator.pop(context, 'Cancel'),
+          child: const Text('Cancelar'),
+        ),
         TextButton(
-            child: Text('Aceptar'),
-            onPressed: () => {
-              _deleteEjercise(ejercise),
-              Navigator.pop(context, 'OK'),
-            }),
+          child: const Text('Aceptar'),
+          onPressed: () async {
+            await _deleteEjercise(ejercise);
+            Navigator.pop(context, 'OK');
+          },
+        ),
       ],
     );
     showDialog(
@@ -79,24 +88,27 @@ class _EjercisePersPageState extends State<EjercisePersPage> {
               leading: Image.network(
                 ejercise['urlPicture'] ?? "",
               ),
-            ),
-            /*    Container(
-              height: 100.0,
-              width: 100.0,
-              child: Ink.image(
-                image: ejercise['urlPicture'] == ""
-                    ? const AssetImage('assets/images/logo.png')
-                        as ImageProvider
-                    : NetworkImage(ejercise['urlPicture']),
+              trailing: FutureBuilder<bool>(
+                future: _isFavorite(ejercise['name']),
+                builder: (context, snapshot) {
+                  bool isFavorite = snapshot.data ?? false;
+                  return Icon(
+                    Icons.favorite,
+                    color: isFavorite ? Colors.red : Colors.grey,
+                  );
+                },
               ),
             ),
-            const SizedBox(
-              height: 16.0,
-            ),*/
           ],
         ),
       ),
     );
+  }
+
+  // Verificar si el ejercicio es favorito
+  Future<bool> _isFavorite(String name) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(name) ?? false;
   }
 
   @override
@@ -105,16 +117,18 @@ class _EjercisePersPageState extends State<EjercisePersPage> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance.collection("ejercises").snapshots(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) return Text("Loading");
-              return ListView.builder(
-                  itemCount: snapshot.data?.docs.length,
-                  itemBuilder: (context, index) {
-                    QueryDocumentSnapshot ejercise = snapshot.data!.docs[index];
-                    return _buildCard(ejercise);
-                  });
-            }),
+          stream: FirebaseFirestore.instance.collection("ejercises").snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) return const Text("Loading");
+            return ListView.builder(
+              itemCount: snapshot.data?.docs.length,
+              itemBuilder: (context, index) {
+                QueryDocumentSnapshot ejercise = snapshot.data!.docs[index];
+                return _buildCard(ejercise);
+              },
+            );
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addButtonClicked,
