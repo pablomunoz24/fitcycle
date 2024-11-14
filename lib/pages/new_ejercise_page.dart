@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:fitcycle/models/ejercise.dart';
+import 'package:fitcycle/pages/ejercise_pers_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -48,7 +49,6 @@ class _NewEjercisePageState extends State<NewEjercisePage> {
   bool _Domingo=false;
 
   Future<void> _saveEjerciseButtonClicked() async {
-
     var ejercise = Ejercise(
         "",
         _name.text,
@@ -64,38 +64,48 @@ class _NewEjercisePageState extends State<NewEjercisePage> {
         _Domingo,
         _level.text,
         _intensity.text,
-        "");
+        ""
+    );
 
-    var result = await _firebaseApi.createEjercise(ejercise, image);
+    // Check if an image was selected; pass null if not
+    var result = await _firebaseApi.createEjercise(ejercise, image??null);
 
     if (result == 'network-request-failed') {
       showMessage('Revise su conexión a internet');
     } else {
-      showMessage('Ejercicio creada exitosamente');
+      showMessage('Ejercicio creado exitosamente');
       Navigator.pop(context);
     }
+
     // Notify that the exercise was saved
     if (widget.onFavoriteSaved != null) {
       widget.onFavoriteSaved!();
     }
-    var localEjercise =LocalEjercise()
-      ..id=ejercise.id
-      ..name=ejercise.name
-      ..duration=ejercise.duration
-      ..isTroncosuperiorE=ejercise.isTroncosuperiorF
-      ..isTroncoInferiroE=ejercise.isTroncoInferiro
-      ..Lunes=ejercise.Lunes
-      ..Martes=ejercise.Martes
-      ..Miercoles=ejercise.Miercoles
-      ..Jueves=ejercise.Jueves
-      ..Viernes=ejercise.Viernes
-      ..Sabado=ejercise.Sabado
-      ..Domingo=ejercise.Domingo
-      ..Level=ejercise.level
-      ..intensity=ejercise.intensity
-      ..urlPicture=ejercise.urlPicture;
-    final box=Boxes.getLocalEjerciseBox();
+
+    var localEjercise = LocalEjercise()
+      ..id = ejercise.id
+      ..name = ejercise.name
+      ..duration = ejercise.duration
+      ..isTroncosuperiorE = ejercise.isTroncosuperiorF
+      ..isTroncoInferiroE = ejercise.isTroncoInferiro
+      ..Lunes = ejercise.Lunes
+      ..Martes = ejercise.Martes
+      ..Miercoles = ejercise.Miercoles
+      ..Jueves = ejercise.Jueves
+      ..Viernes = ejercise.Viernes
+      ..Sabado = ejercise.Sabado
+      ..Domingo = ejercise.Domingo
+      ..Level = ejercise.level
+      ..intensity = ejercise.intensity
+      ..urlPicture = ejercise.urlPicture;
+
+    final box = Boxes.getLocalEjerciseBox();
     box.add(localEjercise);
+
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const EjercisePersPage())
+    );
   }
 
   void showMessage(String msg) {

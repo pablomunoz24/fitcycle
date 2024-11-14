@@ -85,16 +85,20 @@ class _EjercisePersPageState extends State<EjercisePersPage> {
             ListTile(
               title: Text(ejercise['name']),
               subtitle: Text('${ejercise['duration']} segundos'),
-              leading: Image.network(
-                ejercise['urlPicture'] ?? "",
-              ),
-              trailing: FutureBuilder<bool>(
+              leading: ejercise['urlPicture'] != null && ejercise['urlPicture']!.isNotEmpty
+                  ? Image.network(ejercise['urlPicture']!) // Si hay una URL, se muestra la imagen desde la red
+                  : ejercise['isTroncosuperiorF'] == true // Si no hay URL y es 'Tronco superior'
+                  ? Image.asset('assets/images/Trensup.png') // Imagen predeterminada para 'Tronco superior'
+                  : ejercise['isTroncoInferiro'] == true // Si es 'Tronco inferior'
+                  ? Image.asset('assets/images/Treninf.png') // Imagen predeterminada para 'Tronco inferior'
+                  : Image.asset('assets/images/fitcycle.png'), // Imagen predeterminada genérica
+          trailing: FutureBuilder<bool>(
                 future: _isFavorite(ejercise['name']),
                 builder: (context, snapshot) {
                   bool isFavorite = snapshot.data ?? false;
                   return Icon(
-                    Icons.favorite,
-                    color: isFavorite ? Colors.red : Colors.grey,
+                    Icons.check_circle_rounded,
+                    color: isFavorite ? Colors.blue : Colors.grey,
                   );
                 },
               ),

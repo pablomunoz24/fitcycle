@@ -112,7 +112,7 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
     });
     if (_isFavorite) {
       await prefs.setBool(widget.exercise.name ?? '', true);
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => NewEjercisePage(

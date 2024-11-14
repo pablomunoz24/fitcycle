@@ -63,9 +63,13 @@ class FirebaseAppi {
       ejercise.id = document.id;
 
       final storageRef = FirebaseStorage.instance.ref();
-      final ejercisePictureRef = storageRef.child('ejercises').child("${ejercise.id}.jpg");
-      await ejercisePictureRef.putFile(image!);
-      ejercise.urlPicture = await ejercisePictureRef.getDownloadURL();
+      if (image != null) {
+        final ejercisePictureRef = storageRef.child('ejercises').child("${ejercise.id}.jpg");
+        await ejercisePictureRef.putFile(image);
+        ejercise.urlPicture = await ejercisePictureRef.getDownloadURL();
+      } else {
+        ejercise.urlPicture = '';
+      }
 
       await db
           .collection('users')
