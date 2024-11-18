@@ -1,3 +1,4 @@
+import 'package:fitcycle/pages/routine_page.dart';
 import 'package:flutter/material.dart';
 
 import 'ejercise_pers_page.dart';
@@ -79,7 +80,10 @@ class _EjercisePageState extends State<EjercisePage> {
                     splashColor: Colors.black26, // Color de la animación splash
                     borderRadius: BorderRadius.circular(28), // Mantiene el borde redondeado
                     onTap: () {
-                      // Acción cuando se presiona el botón
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context)=> const RoutinePage()));
                     },
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,

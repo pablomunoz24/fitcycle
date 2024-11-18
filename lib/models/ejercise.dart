@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Ejercise  {
   String _id;
   String _name;
@@ -139,5 +141,25 @@ class Ejercise  {
 
   set urlPicture(String value) {
     _urlPicture = value;
+  }
+  factory Ejercise.fromFirestore(QueryDocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return Ejercise(
+      data['id'] ?? '', // Suponiendo que tienes un campo "id" en Firestore
+      data['name'] ?? '',
+      data['duration'] ?? 0,
+      data['isTroncosuperiorF'] ?? false,
+      data['isTroncoInferiro'] ?? false,
+      data['Lunes'] ?? false,
+      data['Martes'] ?? false,
+      data['Miercoles'] ?? false,
+      data['Jueves'] ?? false,
+      data['Viernes'] ?? false,
+      data['Sabado'] ?? false,
+      data['Domingo'] ?? false,
+      data['level'] ?? '',
+      data['intensity'] ?? '',
+      data['urlPicture'] ?? '',
+    );
   }
 }
