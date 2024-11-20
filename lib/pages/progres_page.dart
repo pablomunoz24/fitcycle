@@ -154,7 +154,19 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
             ),
             const SizedBox(height: 8),
             Text(
-              widget.exercise.description ?? 'Sin descripción',
+                widget.exercise.description
+                    ?.replaceAll('<ol>', '')
+                    .replaceAll('</ol>', '')
+                    .replaceAll('</li>', '')
+                    .replaceAll('</p>', '\n')
+                    .replaceAll('<p>', '')
+                    .replaceAll('<li>', '\n- ')
+                    .replaceAll(RegExp(r'[áÁ]'), 'a')
+                    .replaceAll(RegExp(r'[é]'), 'e')
+                    .replaceAll(RegExp(r'[íÍ]'), 'i')
+                    .replaceAll(RegExp(r'[óÓ]'), 'o')
+                    .replaceAll(RegExp(r'[úÚ]'), 'u')
+                    .replaceAll(RegExp(r'[ñÑ]'), 'n') ?? 'Sin descripción',
               style: TextStyle(fontSize: 16),
             ),
           ],
