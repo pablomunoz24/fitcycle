@@ -16,6 +16,7 @@ class Ejercise  {
   String _level;
   String _intensity;
   String _urlPicture;
+  String _userId;
 
   Map<String, dynamic> toJson() => {
     "id": _id,
@@ -33,6 +34,7 @@ class Ejercise  {
     "level": _level,
     "intensity": _intensity,
     "urlPicture": _urlPicture,
+    "userID":_userId,
 
   };
 
@@ -51,7 +53,9 @@ class Ejercise  {
       this._Domingo,
       this._level,
       this._intensity,
-      this._urlPicture);
+      this._urlPicture,
+      this._userId
+  );
 
   String get id => _id;
 
@@ -160,6 +164,14 @@ class Ejercise  {
       data['level'] ?? '',
       data['intensity'] ?? '',
       data['urlPicture'] ?? '',
+      data['userId']?? '',
     );
   }
+
+  String get userId => _userId;
+
+  set userId(String value) {
+    _userId = value;
+  }
+
 }

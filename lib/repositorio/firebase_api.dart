@@ -51,9 +51,12 @@ class FirebaseAppi {
       return e.code;
     }
   }
-  Future<String> createEjercise(Ejercise ejercise, File? image) async{
-    try{
+  Future<String> createEjercise(Ejercise ejercise, File? image) async {
+    try {
       final uid = FirebaseAuth.instance.currentUser?.uid;
+      if (uid == null) {
+        throw Exception('Usuario no autenticado');
+      }
       var db = FirebaseFirestore.instance;
       final document = await db
           .collection('users')
@@ -61,6 +64,7 @@ class FirebaseAppi {
           .collection('ejercise')
           .doc();
       ejercise.id = document.id;
+      ejercise.userId = uid;
 
       final storageRef = FirebaseStorage.instance.ref();
       if (image != null) {

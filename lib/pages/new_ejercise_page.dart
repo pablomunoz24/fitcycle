@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitcycle/models/ejercise.dart';
 import 'package:fitcycle/pages/ejercise_pers_page.dart';
 import 'package:flutter/material.dart';
@@ -49,26 +50,33 @@ class _NewEjercisePageState extends State<NewEjercisePage> {
   bool _Domingo=false;
 
   Future<void> _saveEjerciseButtonClicked() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      showMessage('No se pudo identificar al usuario.');
+      return;
+    }
+
     var ejercise = Ejercise(
-        "",
-        _name.text,
-        int.parse(_duration.text),
-        _isTroncosuperiorE,
-        _isTroncoInferiroE,
-        _Lunes,
-        _Martes,
-        _Miercoles,
-        _Jueves,
-        _Viernes,
-        _Sabado,
-        _Domingo,
-        _level.text,
-        _intensity.text,
-        ""
+      "",
+      _name.text,
+      int.parse(_duration.text),
+      _isTroncosuperiorE,
+      _isTroncoInferiroE,
+      _Lunes,
+      _Martes,
+      _Miercoles,
+      _Jueves,
+      _Viernes,
+      _Sabado,
+      _Domingo,
+      _level.text,
+      _intensity.text,
+      "",
+      user.uid, // Asociar al UID del usuario
     );
 
-    // Check if an image was selected; pass null if not
-    var result = await _firebaseApi.createEjercise(ejercise, image??null);
+    var result = await _firebaseApi.createEjercise(ejercise, image ?? null);
 
     if (result == 'network-request-failed') {
       showMessage('Revise su conexión a internet');
