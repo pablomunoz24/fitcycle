@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/apiejercises_category_response.dart';
 import '../repositorio/ejercisecategory_api.dart';
 import 'new_ejercise_page.dart';
-
+import 'dart:convert';
 class ProgresPage extends StatefulWidget {
   const ProgresPage({super.key});
 
@@ -161,6 +161,7 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
                     .replaceAll('</p>', '\n')
                     .replaceAll('<p>', '')
                     .replaceAll('<li>', '\n- ')
+                    .replaceAll('´','')
                     .replaceAll(RegExp(r'[áÁ]'), 'a')
                     .replaceAll(RegExp(r'[é]'), 'e')
                     .replaceAll(RegExp(r'[íÍ]'), 'i')

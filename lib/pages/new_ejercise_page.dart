@@ -209,7 +209,7 @@ class _NewEjercisePageState extends State<NewEjercisePage> {
               TextFormField(
                 controller: _duration,
                 decoration: const InputDecoration(
-                    border: OutlineInputBorder(), labelText: 'Duración'),
+                    border: OutlineInputBorder(), labelText: 'Duración en minutos'),
                 keyboardType: TextInputType.number,
               ),
               const SizedBox(

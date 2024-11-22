@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'dart:async';
 import '../models/ejercise.dart';
 
@@ -23,6 +24,8 @@ class _CronoPageState extends State<CronoPage> {
   int _seconds = 0;
   bool _isRunning = false;
 
+  final  _audioPlayer = AudioPlayer();
+
   final Map<String, String> daysInSpanish = {
     'Lunes': 'Lunes',
     'Martes': 'Martes',
@@ -42,6 +45,7 @@ class _CronoPageState extends State<CronoPage> {
   @override
   void dispose() {
     _timer?.cancel();
+    _audioPlayer.dispose();
     super.dispose();
   }
 
@@ -59,15 +63,24 @@ class _CronoPageState extends State<CronoPage> {
         } else {
           _timer?.cancel();
           _isRunning = false;
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('¡Tiempo completado!'),
-              backgroundColor: Colors.green,
-            ),
-          );
+          _onTimeComplete();
         }
       });
     });
+  }
+
+  void _onTimeComplete() async {
+
+    // Mostrar notificación visual
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('¡Ejercicio completado!'),
+        backgroundColor: Colors.green,
+      ),
+    );
+
+    // Reproducir sonido
+    _audioPlayer.play(AssetSource('assets/sounds/notificacion.mp3'));
   }
 
   void _pauseTimer() {
@@ -162,7 +175,8 @@ class _CronoPageState extends State<CronoPage> {
 
                 if (exercises.isEmpty) {
                   return Center(
-                    child: Text('No hay ejercicios programados para ${daysInSpanish[selectedDay]}'),
+                    child: Text(
+                        'No hay ejercicios programados para ${daysInSpanish[selectedDay]}'),
                   );
                 }
 
@@ -200,15 +214,19 @@ class _CronoPageState extends State<CronoPage> {
                                       onPressed: _isRunning
                                           ? _pauseTimer
                                           : () => _startTimer(
-                                          exercises[currentExerciseIndex!].duration),
+                                          exercises[currentExerciseIndex!]
+                                              .duration),
                                       child: Icon(
-                                        _isRunning ? Icons.pause : Icons.play_arrow,
+                                        _isRunning
+                                            ? Icons.pause
+                                            : Icons.play_arrow,
                                       ),
                                     ),
                                     const SizedBox(width: 20),
                                     ElevatedButton(
                                       onPressed: () => _resetTimer(
-                                          exercises[currentExerciseIndex!].duration),
+                                          exercises[currentExerciseIndex!]
+                                              .duration),
                                       child: const Icon(Icons.restart_alt),
                                     ),
                                   ],
@@ -232,7 +250,8 @@ class _CronoPageState extends State<CronoPage> {
                             ),
                             child: ListTile(
                               title: Text(exercise.name),
-                              subtitle: Text('Duración: ${exercise.duration} minutos'),
+                              subtitle:
+                              Text('Duración: ${exercise.duration} minutos'),
                               selected: currentExerciseIndex == index,
                               onTap: () {
                                 setState(() {

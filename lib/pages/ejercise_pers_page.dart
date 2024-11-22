@@ -87,19 +87,19 @@ class _EjercisePersPageState extends State<EjercisePersPage> {
           children: [
             ListTile(
               title: Text(ejercise['name']),
-              subtitle: Text('${ejercise['duration']} segundos'),
+              subtitle: Text('${ejercise['duration']} Minutos'),
               leading: ejercise['urlPicture'] != null &&
                   ejercise['urlPicture']!.isNotEmpty
                   ? Image.network(
                   ejercise['urlPicture']!) // Si hay una URL, se muestra la imagen desde la red
                   : ejercise['isTroncosuperiorF'] ==
-                  true // Si no hay URL y es 'Tronco superior'
+                  true
                   ? Image.asset(
                   'assets/images/Trensup.png') // Imagen predeterminada para 'Tronco superior'
                   : ejercise['isTroncoInferiro'] ==
                   true // Si es 'Tronco inferior'
                   ? Image.asset(
-                  'assets/images/Treninf.png') // Imagen predeterminada para 'Tronco inferior'
+                  'assets/images/Treninf.png') //
                   : Image.asset('assets/images/fitcycle.png'),
               // Imagen predeterminada genérica
               trailing: FutureBuilder<bool>(

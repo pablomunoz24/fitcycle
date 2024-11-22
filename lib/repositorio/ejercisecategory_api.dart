@@ -9,11 +9,16 @@ class EjerciseCategoryApi {
   // Método para obtener los ejercicios
   Future<ApiejercisesCategoryResponse> getEjercise() async {
     final response = await http.get(
-        Uri.parse('https://wger.de/api/v2/exercise/?exercise=1&language=4'));
+      Uri.parse('https://wger.de/api/v2/exercise/?exercise=1&language=4'),
+    );
+
     if (response.statusCode == 200) {
-      return ApiejercisesCategoryResponse.fromJson(jsonDecode(response.body));
+      // Decodificar correctamente el cuerpo de la respuesta
+      final result = json.decode(utf8.decode(response.bodyBytes));
+      // Crear la respuesta usando el JSON decodificado
+      return ApiejercisesCategoryResponse.fromJson(result);
     } else {
-      throw Exception('Falla al cargar los ejercicios');
+      throw Exception('Error al cargar los ejercicios');
     }
   }
 }
